@@ -257,14 +257,14 @@ using (TransactionScope trans = new TransactionScope())
             .UpdateWhen(x => x.Price <= 20)
             .Commit(conn); 
 
-	»òÕß
+	/*æˆ–è€… */
 	 bulk.Setup<Book>()
             .ForCollection(books)
             .WithTable("Books")
             .AddColumn(x => x.Price)
             .BulkUpdate()
             .MatchTargetOn(x => x.ISBN)
-            .UpdateWhen($"(Target.Price!=Source.Price)") //ÐÂÔö
+            .UpdateWhen($"(Target.Price!=Source.Price)") //æ–°å¢ž2019-05-29
             .Commit(conn); 
         /* BulkInsertOrUpdate example */
 
