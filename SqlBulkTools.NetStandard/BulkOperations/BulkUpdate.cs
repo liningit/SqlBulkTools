@@ -19,6 +19,7 @@ namespace SqlBulkTools
     {
         private Dictionary<string, bool> _nullableColumnDic;
 
+        private string updateWhen = string.Empty;
         /// <summary>
         /// Updates existing records in bulk.
         /// </summary>
@@ -40,6 +41,19 @@ namespace SqlBulkTools
             _nullableColumnDic = new Dictionary<string, bool>();
         }
 
+        public BulkUpdate<T> UpdateWhen(string sql)
+        {
+            if (!string.IsNullOrEmpty(updateWhen))
+            {
+                throw new Exception("已经设置过一遍了");
+            }
+            if (!sql.Trim().ToUpper().StartsWith("AND "))
+            {
+                sql = " AND " + sql;
+            }
+            updateWhen = sql;
+            return this;
+        }
         /// <summary>
         /// Only update records when the target satisfies a speicific requirement. This is used in conjunction with MatchTargetOn.
         /// See help docs for examples.
@@ -313,11 +327,16 @@ namespace SqlBulkTools
 
         private string GetCommand(SqlConnection connection)
         {
+            if (_updatePredicates?.Count > 0 && !string.IsNullOrEmpty(updateWhen))
+            {
+                throw new Exception("两种updateWhen不可同时使用");
+            }
             string comm = "MERGE INTO " + BulkOperationsHelper.GetFullQualifyingTableName(connection.Database, _schema, _tableName) + $" WITH ({_tableHint}) AS Target " +
                               "USING " + Constants.TempTableName + " AS Source " +
                               BulkOperationsHelper.BuildJoinConditionsForInsertOrUpdate(_matchTargetOn.ToArray(),
                                   Constants.SourceAlias, Constants.TargetAlias, base._collationColumnDic, _nullableColumnDic) +
-                              "WHEN MATCHED " + BulkOperationsHelper.BuildPredicateQuery(_matchTargetOn.ToArray(), _updatePredicates, Constants.TargetAlias, base._collationColumnDic) +
+                              "WHEN MATCHED " + BulkOperationsHelper.BuildPredicateQuery(_matchTargetOn.ToArray(), _updatePredicates, Constants.TargetAlias, base._collationColumnDic)
+                              + " " + updateWhen + " " +
                               "THEN UPDATE " +
                               BulkOperationsHelper.BuildUpdateSet(_columns, Constants.SourceAlias, Constants.TargetAlias, _identityColumn) +
                               BulkOperationsHelper.GetOutputIdentityCmd(_identityColumn, _outputIdentity, Constants.TempOutputTableName,
