@@ -14,10 +14,10 @@
 
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Authors>tiagorosendo, zek99, gtaylor44</Authors>
-    <RepositoryUrl>https://github.com/tiagorosendo/SqlBulkTools</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/tiagorosendo/SqlBulkTools</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/tiagorosendo/SqlBulkTools/blob/master/LICENSE</PackageLicenseUrl>
+    <Authors>liningit,tiagorosendo, zek99, gtaylor44</Authors>
+    <RepositoryUrl>https://github.com/liningit/SqlBulkTools</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/liningit/SqlBulkTools</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/liningit/SqlBulkTools/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>SQL BULK BULKINSERT BULKUPDATE</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
