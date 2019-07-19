@@ -6,6 +6,7 @@ namespace SqlBulkTools.TestCommon.Model
 
     public class ComplexTypeModel
     {
+        public static int Test { get; set; }
         public int Id { get; set; }
 
         public EstimatedStats MinEstimate { get; set; }

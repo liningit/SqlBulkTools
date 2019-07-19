@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -21,8 +22,8 @@ namespace SqlBulkTools
         /// <param name="schema"></param>
         /// <param name="bulkCopySettings"></param>
         /// <param name="propertyInfoList"></param>
-        public BulkAddColumnList(IEnumerable<T> list, string tableName, HashSet<string> columns, Dictionary<string, string> customColumnMappings, 
-            string schema, BulkCopySettings bulkCopySettings, List<PropertyInfo> propertyInfoList) 
+        public BulkAddColumnList(IEnumerable<T> list, string tableName, HashSet<string> columns, Dictionary<string, string> customColumnMappings,
+            string schema, BulkCopySettings bulkCopySettings, List<PropertyInfo> propertyInfoList)
             :
             base(list, tableName, columns, customColumnMappings, schema, bulkCopySettings, propertyInfoList)
         {
@@ -47,7 +48,11 @@ namespace SqlBulkTools
             _customColumnMappings.Add(propertyName, destination);
             return this;
         }
-
+        public BulkAddColumnList<T> RemoveWhere(Predicate<string> match)
+        {
+            _columns.RemoveWhere(match);
+            return this;
+        }
         /// <summary>
         /// Removes a column that you want to be excluded. 
         /// </summary>
@@ -60,9 +65,9 @@ namespace SqlBulkTools
             if (_columns.Contains(propertyName))
                 _columns.Remove(propertyName);
 
-            else           
-                throw new SqlBulkToolsException("Could not remove the column with name " 
-                    + columnName +  
+            else
+                throw new SqlBulkToolsException("Could not remove the column with name "
+                    + columnName +
                     ". This could be because it's not a value or string type and therefore not included.");
 
             return this;
